@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ site_title }}</title>
+  </head>
+  <body>
+    <div class="container">
+      <p>Site description: {{site_description}}</p>
+    </div>
+    <div>
+        {% for gallery, images in galleries.items() %}
+                 <h1>Key: {{gallery}}</h1>
+                 <h2>Value: {{images}}</h2>
+        {% endfor %}
+    </div>
+    <div>
+        {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
+
