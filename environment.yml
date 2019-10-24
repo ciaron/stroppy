@@ -3,20 +3,28 @@ channels:
   - intel
   - defaults
 dependencies:
+  - _libgcc_mutex=0.1=main
   - bzip2=1.0.6=18
-  - certifi=2018.1.18=py36_2
+  - ca-certificates=2019.10.16=0
+  - certifi=2019.9.11=py37_0
   - intelpython=2019.5=0
-  - jinja2=2.9.6=py36_2
-  - markupsafe=1.0=py36_3
-  - openssl=1.0.2s=0
-  - pip=19.1.1=py36_0
-  - python=3.6.9=5
-  - pyyaml=5.1.1=py36_0
-  - setuptools=41.0.1=py36_0
-  - sqlite=3.28.0=0
+  - jinja2=2.10.3=py_0
+  - libedit=3.1.20181209=hc058e9b_0
+  - libffi=3.2.1=11
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - libstdcxx-ng=9.1.0=hdf63c60_0
+  - markupsafe=1.1.1=py37h7b6447c_0
+  - ncurses=6.1=he6710b0_1
+  - openssl=1.1.1d=h7b6447c_3
+  - pip=19.3.1=py37_0
+  - python=3.7.4=h265db76_1
+  - pyyaml=5.1.2=py37h7b6447c_0
+  - readline=7.0=h7b6447c_5
+  - setuptools=41.4.0=py37_0
+  - sqlite=3.30.0=h7b6447c_0
   - tcl=8.6.4=24
-  - tk=8.6.4=29
-  - wheel=0.31.0=py36_3
+  - tk=8.6.8=hbc83047_0
+  - wheel=0.33.6=py37_0
   - xz=5.2.4=5
   - yaml=0.1.7=2
   - zlib=1.2.11=5
