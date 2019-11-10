@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ site_title }}</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/uikit.min.css" />
+        <script src="js/uikit.min.js"></script>
+        <script src="js/uikit-icons.min.js"></script>
+  </head>
+  <body>
+
+    <div uk-grid>
+        <div class="uk-width-1-1@m">
+        {% include "header.html" ignore missing %}
+        </div>
+    </div>
+
+    <div uk-grid>
+        <div class="uk-width-1-4@m">sidebar:    {% include "sidebar.html" %} </div>
+        <div class="uk-width-3-4@m">content:    {% block content %} {% endblock %}</div>
+    </div>
+
+    <div>footer:    {% include "footer.html" %} </div>
+
+  </body>
+</html>
+

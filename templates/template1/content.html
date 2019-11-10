@@ -1,14 +1,14 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 {% block content %}
-  <h3> This is the start of my child template</h3>
-  <br>
-  <p>My string: {{my_string}}</p>
-  <p>Value from the list: {{my_list[3]}}</p>
-  <p>Loop through the list:</p>
-  <ul>
-    {% for n in my_list %}
-    <li>{{n}}</li>
-    {% endfor %}
-  </ul>
-  <h3> This is the end of my child template</h3>
+    <div class="container">
+      <p>Site description: {{site_description}}</p>
+    </div>
+    <div>
+        {% for gallery, images in galleries.items() %}
+                 <h1>Key: {{gallery}}</h1>
+                 <div>Value: {{images}}</div>
+        {% endfor %}
+    </div>
+    <div>
+    </div>
 {% endblock %}

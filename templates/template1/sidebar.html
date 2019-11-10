@@ -1,0 +1,10 @@
+{% block sidebar %}
+    <div>
+    <ul>
+        {% for galleryslug, gallery in galleries.items() %}
+           <li><a href="{{galleryslug}}">{{gallery.name}}</a></li>
+        {% endfor %}
+    </ul>   
+ </div>
+
+{% endblock %}

@@ -2,7 +2,7 @@ import os
 import sys
 import imghdr
 from jinja2 import Environment, FileSystemLoader, Template
-
+from slugify import slugify
 from yaml import load, dump
 from pathlib import Path
 home = str(Path.home())
@@ -20,8 +20,10 @@ config_file = "config.yml"
 site_dir="_site"
 
 def read_config():
+    # read the YAML config file into "conf" object
     with open(os.path.join(home, gallery_path, config_file), 'r') as stream:
         conf = load(stream, Loader=Loader)
+    if DEBUG: print(conf)
     return conf
 
 def read_galleries():
@@ -29,20 +31,21 @@ def read_galleries():
     gs.sort() # sort in-place
 
     galleries = {}
-    for g in gs:
-        gallerypath = os.path.join(base_path,g) 
+    for g in gs: # gallery names, i.e. directory names
+        gallerypath = os.path.join(base_path, g) 
         if (not os.path.isdir(gallerypath) or g.startswith("_")): # ignore non-dirs and existing _site dir
             pass
         else:
             if DEBUG: print(g)
             for root, dirs, files in os.walk(gallerypath):
-                galleries[g] = []
+                galleries[slugify(g)] = {'name': g, 'images': []}
                 for f in files:
                     # only add names of image files
-                    if imghdr.what(os.path.join(gallerypath,f)):
-                        galleries[g].append(f)
+                    if imghdr.what(os.path.join(gallerypath, f)):
+                        galleries[slugify(g)]['images'].append(f)
 
     # we now have a dict of the form {gallery1: [ list of image filenames in gallery1 ], gallery2: [...]...}
+    # want: {gallery_slug: {name: path, images: [ list of images ]}
     return galleries
 
 if __name__=="__main__":
@@ -69,6 +72,7 @@ if __name__=="__main__":
 
     conf = read_config()
     galleries = read_galleries()
+
     try:
         os.mkdir(os.path.join(base_path, site_dir))
     except FileExistsError as err:
@@ -77,12 +81,14 @@ if __name__=="__main__":
         print("Failed to create site directory - exiting: %s, %s" % (type(err), err))
         sys.exit(1)
 
-    env = Environment(loader=FileSystemLoader('templates'), cache_size=0)
-    template = env.get_template('template1/index.html')
+    env = Environment(loader=FileSystemLoader('templates/template1'), cache_size=0)
+    template = env.get_template('content.html')
     rndr = template.render(**conf, galleries=galleries)
 
-    with open("_index.html", "w") as fh:
-            fh.write(rndr)
+    with open("index.html", "w") as fh:
+        fh.write(rndr)
+
+    # loop over galleries rendering <gallery-name>.html for each
 
     if (DEBUG):
         print(conf)
