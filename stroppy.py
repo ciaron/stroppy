@@ -81,13 +81,17 @@ if __name__=="__main__":
     first = next(iter(galleries))
     print(galleries[first])
     rndr = template.render(**conf, slug=first, gallery=galleries[first], galleries=galleries)
-    with open("index.html", "w") as fh:
+    with open(os.path.join(base_path, site_dir, "index.html"), "w") as fh:
         fh.write(rndr)
 
     # loop over galleries rendering <gallery-slug>.html for each
     for gallery in iter(galleries):
         rndr = template.render(**conf, slug=gallery, gallery=galleries[gallery], galleries=galleries)
-        with open(gallery+".html", "w") as fh:
+        try:
+            os.mkdir(os.path.join(base_path, site_dir, gallery))
+        except:
+            pass
+        with open(os.path.join(base_path, site_dir, gallery, "index.html"), "w") as fh:
             fh.write(rndr)
 
 
