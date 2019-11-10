@@ -4,9 +4,10 @@
       <p>Site description: {{site_description}}</p>
     </div>
     <div>
-        {% for gallery, images in galleries.items() %}
-                 <h1>Key: {{gallery}}</h1>
-                 <div>Value: {{images}}</div>
+        {% for galleryslug, gallery in galleries.items() %}
+                 <h1>Gallery Slug: {{galleryslug}}</h1>
+                 <div>Gallery Name: {{gallery.name}}</div>
+                 <div>Gallery Images: {{gallery.images}}</div>
         {% endfor %}
     </div>
     <div>
