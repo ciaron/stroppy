@@ -10,18 +10,14 @@
   </head>
   <body>
 
-    <div uk-grid>
-        <div class="uk-width-1-1@m">
         {% include "header.html" ignore missing %}
-        </div>
-    </div>
 
     <div uk-grid>
         <div class="uk-width-1-4@m">sidebar:    {% include "sidebar.html" %} </div>
         <div class="uk-width-3-4@m">content:    {% block content %} {% endblock %}</div>
     </div>
 
-    <div>footer:    {% include "footer.html" %} </div>
+    {% include "footer.html" %}
 
   </body>
 </html>

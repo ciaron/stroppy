@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
+    This is the content block
     <div class="container">
       <p>Site description: {{site_description}}</p>
     </div>
     <div>
-        {% for galleryslug, gallery in galleries.items() %}
-                 <h1>Gallery Slug: {{galleryslug}}</h1>
-                 <div>Gallery Name: {{gallery.name}}</div>
-                 <div>Gallery Images: {{gallery.images}}</div>
-        {% endfor %}
+         <h1>Gallery Slug: {{slug}}</h1>
+         <div>Gallery Name: {{gallery.name}}</div>
+         <div>Gallery Images: {{gallery.images}}</div>
     </div>
     <div>
     </div>
+    end of content block
 {% endblock %}
