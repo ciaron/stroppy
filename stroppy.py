@@ -1,5 +1,6 @@
 import os
 import sys
+from shutil import copy
 from collections import OrderedDict
 import imghdr
 from jinja2 import Environment, FileSystemLoader, Template
@@ -9,6 +10,7 @@ from pathlib import Path
 home = str(Path.home())
 
 DEBUG = True
+COPY = False # whether to copy image files - only needed for first time runs
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -24,7 +26,7 @@ def read_config():
     # read the YAML config file into "conf" object
     with open(os.path.join(home, gallery_path, config_file), 'r') as stream:
         conf = load(stream, Loader=Loader)
-    if DEBUG: print(conf)
+    #if DEBUG: print(conf)
     return conf
 
 def read_galleries():
@@ -37,7 +39,7 @@ def read_galleries():
         if (not os.path.isdir(gallerypath) or g.startswith("_")): # ignore non-dirs and existing _site dir
             pass
         else:
-            if DEBUG: print(g)
+            #if DEBUG: print(g)
             for root, dirs, files in os.walk(gallerypath):
                 galleries[slugify(g)] = {'name': g, 'images': []}
                 for f in files:
@@ -47,6 +49,16 @@ def read_galleries():
 
     # we now have a dict of the form {gallery_slug: {name: <name of directory/gallery>, images: [ list of images ]}
     return galleries
+
+def copy_images(gallery):
+    # copy images files from source galleries to gallery-slug/images/
+    
+    dst = os.path.join(base_path, site_dir, gallery, "images")
+    print(dst)
+
+    for i in galleries[gallery]['images']:
+        src = os.path.join(base_path, galleries[gallery]["name"], i)
+        copy(src, dst)
 
 if __name__=="__main__":
 
@@ -67,19 +79,22 @@ if __name__=="__main__":
     conf = read_config()
     galleries = read_galleries()
 
+    # create site directory...
     try:
         os.mkdir(os.path.join(base_path, site_dir))
     except FileExistsError as err:
-        print("Site directory exists, continuing...")
+        #print("Site directory exists, continuing...")
+        pass
     except Exception as err:
         print("Failed to create site directory - exiting: %s, %s" % (type(err), err))
         sys.exit(1)
 
+    # RENDER templates
     env = Environment(loader=FileSystemLoader('templates/template1'), cache_size=0)
     template = env.get_template('content.html')
 
+    # render the first gallery to the main index.html
     first = next(iter(galleries))
-    print(galleries[first])
     rndr = template.render(**conf, slug=first, gallery=galleries[first], galleries=galleries)
     with open(os.path.join(base_path, site_dir, "index.html"), "w") as fh:
         fh.write(rndr)
@@ -88,13 +103,19 @@ if __name__=="__main__":
     for gallery in iter(galleries):
         rndr = template.render(**conf, slug=gallery, gallery=galleries[gallery], galleries=galleries)
         try:
-            os.mkdir(os.path.join(base_path, site_dir, gallery))
+            os.makedirs(os.path.join(base_path, site_dir, gallery, "images"))
         except:
             pass
         with open(os.path.join(base_path, site_dir, gallery, "index.html"), "w") as fh:
             fh.write(rndr)
 
+    # End RENDER
 
-    if (DEBUG):
-        print(conf)
-        print(galleries)
+    # ...populate site directory with the image folders (copy)
+    if COPY:
+        for gallery in galleries:
+          copy_images(gallery)
+
+    #if (DEBUG):
+    #    print(conf)
+    #    print(galleries)
