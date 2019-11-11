@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# create env from environment.yml:
+# conda env create -f environment.yml
+
+conda activate stroppyenv
+
+# update env (e.g from new environment.yml)
+#conda env update --prefix /home/linstead/miniconda3/envs/stroppyenv --file environment.yml  --prune
+
