@@ -41,18 +41,26 @@ def read_galleries():
         else:
             #if DEBUG: print(g)
             for root, dirs, files in os.walk(gallerypath):
-                galleries[slugify(g)] = {'name': g, 'images': []}
+                galleries[slugify(g)] = {'name': g, 'images': {}}
                 for f in files:
                     # only add names of image files
                     if imghdr.what(os.path.join(gallerypath, f)):
-                        galleries[slugify(g)]['images'].append(f)
+                        galleries[slugify(g)]['images'][f] = {}
+                        descriptorfile = os.path.join(gallerypath, os.path.splitext(f)[0] + ".md")
+                        if (os.path.exists(descriptorfile)):
+                            # there's a .md file matching this filename
+                            with open(descriptorfile) as stream:
+                                c = load(stream, Loader=Loader)
+                                for k,v in c.items():
+                                    galleries[slugify(g)]['images'][f][k] = v
+
 
     # we now have a dict of the form {gallery_slug: {name: <name of directory/gallery>, images: [ list of image filenames ]}
     # want: {gallery_slug: 
-    #           { name: <name of directory, i.e. gallery>,
+    #           { name:        <name of directory, i.e. gallery>,
     #             description: <gallery desc from gallery.md in src dir (if exists)>
-    #        images:  { imagefilename1: { title: <image title from imagename.md
-    #                                   description: <image description from imagename.md (if exists)>
+    #             images:      { imagefilename1: { title: <image title from imagename.md
+    #                                              description: <image description from imagename.md (if exists)>
     #                                    } 
     #                   imagefilename2: {
     #                                    }  
@@ -107,6 +115,7 @@ if __name__=="__main__":
 
     conf = read_config()
     galleries = read_galleries()
+    print(galleries)
 
     # create site directory...
     try:
