@@ -47,7 +47,19 @@ def read_galleries():
                     if imghdr.what(os.path.join(gallerypath, f)):
                         galleries[slugify(g)]['images'].append(f)
 
-    # we now have a dict of the form {gallery_slug: {name: <name of directory/gallery>, images: [ list of images ]}
+    # we now have a dict of the form {gallery_slug: {name: <name of directory/gallery>, images: [ list of image filenames ]}
+    # want: {gallery_slug: 
+    #           { name: <name of directory, i.e. gallery>,
+    #             description: <gallery desc from gallery.md in src dir (if exists)>
+    #        images:  { imagefilename1: { title: <image title from imagename.md
+    #                                   description: <image description from imagename.md (if exists)>
+    #                                    } 
+    #                   imagefilename2: {
+    #                                    }  
+    #                 }
+    #
+    #
+    #
     return galleries
 
 def copy_images(gallery):
@@ -59,6 +71,23 @@ def copy_images(gallery):
     for i in galleries[gallery]['images']:
         src = os.path.join(base_path, galleries[gallery]["name"], i)
         copy(src, dst)
+
+def renderHTML(template, galleries):
+    # render the first gallery to the main index.html
+    first = next(iter(galleries))
+    rndr = template.render(**conf, slug=first, galleries=galleries)
+    with open(os.path.join(base_path, site_dir, "index.html"), "w") as fh:
+        fh.write(rndr)
+
+    # loop over galleries rendering <gallery-slug>.html for each
+    for gallery in iter(galleries):
+        rndr = template.render(**conf, slug=gallery, galleries=galleries)
+        try:
+            os.makedirs(os.path.join(base_path, site_dir, gallery, "images"))
+        except:
+            pass
+        with open(os.path.join(base_path, site_dir, gallery, "index.html"), "w") as fh:
+            fh.write(rndr)
 
 if __name__=="__main__":
 
@@ -89,27 +118,10 @@ if __name__=="__main__":
         print("Failed to create site directory - exiting: %s, %s" % (type(err), err))
         sys.exit(1)
 
-    # RENDER templates
     env = Environment(loader=FileSystemLoader('templates/template1'), cache_size=0)
     template = env.get_template('content.html')
 
-    # render the first gallery to the main index.html
-    first = next(iter(galleries))
-    rndr = template.render(**conf, slug=first, gallery=galleries[first], galleries=galleries)
-    with open(os.path.join(base_path, site_dir, "index.html"), "w") as fh:
-        fh.write(rndr)
-
-    # loop over galleries rendering <gallery-slug>.html for each
-    for gallery in iter(galleries):
-        rndr = template.render(**conf, slug=gallery, gallery=galleries[gallery], galleries=galleries)
-        try:
-            os.makedirs(os.path.join(base_path, site_dir, gallery, "images"))
-        except:
-            pass
-        with open(os.path.join(base_path, site_dir, gallery, "index.html"), "w") as fh:
-            fh.write(rndr)
-
-    # End RENDER
+    renderHTML(template, galleries)
 
     # ...populate site directory with the image folders (copy)
     if COPY:
