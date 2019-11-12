@@ -13,7 +13,7 @@
   </head>
   <body>
 
-      <div uk-grid class="uk-padding uk-child-width-expand">
+      <div uk-grid class="uk-padding uk-padding-remove-right uk-child-width-expand">
 
           <div class="uk-width-1-1@m">   
             <div>
@@ -29,7 +29,7 @@
           {% block content %} {% endblock %}
         </div>
 
-        <div class="uk-width-1-6@m"> <!-- right side -->  </div>
+        <div class="uk-width-1-6@m hidden@s"> <!-- right side -->  </div>
 
 
         {% include "footer.html" %}
