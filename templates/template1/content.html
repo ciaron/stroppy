@@ -13,24 +13,21 @@
       </div>
       #}
 
-images: {{ galleries[slug] }}
-
-{% for k, v in galleries[slug].items() %}
-  {% if k=="images" %}
-    {% for k1, v1 in v.items() %}
-       {{ k1 }} : {{v1}}
-    {% endfor %}
-  {% endif %}
-{% endfor %}
-
       <!--<div uk-slideshow class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1"> -->
       <div uk-slideshow class="uk-visible-toggle uk-light">
          <ul uk-lightbox class="uk-slideshow-items">
-          {% for image in galleries[slug].images %}
+
+      {% for k, v in galleries[slug].items() %}
+        {% if k=="images" %}
+          {% for name, image in v.items() %}
            <li>
-               <a href="/{{slug}}/images/{{image}}"><img data-src="/{{slug}}/images/{{image}}" class="uk-height-1-1" uk-cover uk-img alt="{{image.title}}"></a>
+               {#<a href="/{{slug}}/images/{{image}}"><img data-src="/{{slug}}/images/{{image}}" class="uk-height-1-1" uk-cover uk-img alt="{{image.title}}"></a> #}
+               <a href="/{{slug}}/images/{{name}}"><img data-src="/{{slug}}/images/{{name}}" class="uk-height-1-1" uk-cover uk-img alt="{{image.title}}"></a>
            </li>
-           {% endfor %}
+          
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
 
          </ul>
          {#         <a class="uk-slidenav-large uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
