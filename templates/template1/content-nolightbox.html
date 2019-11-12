@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div>
+  <div uk-slideshow class="uk-position-relative uk-visible-toggle" tabindex="-1">
+    <ul class="uk-slideshow-items">
+
+      {% for k, v in galleries[slug].items() %}
+        {% if k=="images" %}
+          {% for name, image in v.items() %}
+           <li>
+               {#        <a href="/{{slug}}/images/{{name}}" class="start" data-caption="{{image.title}}"> #}
+               <div class="uk-position-cover">
+                   <img data-src="/{{slug}}/images/{{name}}" class="uk-height-1-1" uk-img uk-cover>
+                   <div class="uk-overlay uk-overlay-primary uk-position-bottom" id="my-id" hidden="true">{{ image.title }}</div>
+                   {#               </a> #}
+               </div>
+           </li>
+          
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+    </ul>
+
+    <a class="uk-position-center-left uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous uk-slideshow-item="previous"></a>
+    <a class="uk-position-center-right uk-position-small uk-hidden-hover" href="#" uk-slidenav-next uk-slideshow-item="next"></a>
+
+  </div>
+
+</div>
+
+<button uk-toggle="target: #my-id" type="button" class="uk-overlay uk-position-bottom-right" uk-icon="icon: info"></button>
+
+
+{% endblock %}

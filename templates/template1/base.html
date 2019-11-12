@@ -13,13 +13,27 @@
   </head>
   <body>
 
-        <div uk-grid uk-height-viewport="expand: true" class="uk-padding-small">
-        <div class="uk-width-1-1@m uk-margin-small">{% include "header.html" %} </div>
-        <div class="uk-width-1-6@m uk-margin-small">{% include "sidebar.html" %} </div>
-        <div class="uk-width-2-3@m uk-margin-small">{% block content %} {% endblock %}</div>
-        <div class="uk-width-1-6@m uk-margin-small"></div>
-        <div class="uk-width-1-1@m uk-margin-small">{% include "footer.html" %} </div>
+      <div uk-grid class="uk-padding uk-child-width-expand">
+
+          <div class="uk-width-1-1@m">   
+            <div>
+              {% include "header.html" %} 
+            </div>
+          </div>
+
+        <div class="uk-width-1-6@m">   
+          {% include "sidebar.html" %}
         </div>
+        
+        <div class="uk-width-2-3@m" uk-height-viewport="expand: true">   
+          {% block content %} {% endblock %}
+        </div>
+
+        <div class="uk-width-1-6@m"> <!-- right side -->  </div>
+
+
+        {% include "footer.html" %}
+      </div>
 
   </body>
 </html>

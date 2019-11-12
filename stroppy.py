@@ -39,24 +39,22 @@ def read_galleries():
         if (not os.path.isdir(gallerypath) or g.startswith("_")): # ignore non-dirs and existing _site dir
             pass
         else:
-            #if DEBUG: print(g)
             for root, dirs, files in os.walk(gallerypath):
                 galleries[slugify(g)] = {'name': g, 'images': {}}
-                for f in files:
-                    # only add names of image files
-                    if imghdr.what(os.path.join(gallerypath, f)):
-                        galleries[slugify(g)]['images'][f] = {}
-                        descriptorfile = os.path.join(gallerypath, os.path.splitext(f)[0] + ".md")
-                        if (os.path.exists(descriptorfile)):
-                            # there's a .md file matching this filename
-                            with open(descriptorfile) as stream:
+                for imagefilename in files:
+
+                    if imghdr.what(os.path.join(gallerypath, imagefilename)): # is an image file
+                        galleries[slugify(g)]['images'][imagefilename] = {}
+                        descriptorfilename = os.path.join(gallerypath, os.path.splitext(imagefilename)[0] + ".md")
+                        if (os.path.exists(descriptorfilename)):
+                            # there's an .md file matching this filename
+                            with open(descriptorfilename) as stream:
                                 c = load(stream, Loader=Loader)
-                                for k,v in c.items():
-                                    galleries[slugify(g)]['images'][f][k] = v
+                                for datakey,datavalue in c.items(): # add all the data to the image metadata
+                                    galleries[slugify(g)]['images'][imagefilename][datakey] = datavalue
 
-
-    # we now have a dict of the form {gallery_slug: {name: <name of directory/gallery>, images: [ list of image filenames ]}
-    # want: {gallery_slug: 
+    # we now have a dict of the form:
+    # {gallery_slug: 
     #           { name:        <name of directory, i.e. gallery>,
     #             description: <gallery desc from gallery.md in src dir (if exists)>
     #             images:      { imagefilename1: { title: <image title from imagename.md

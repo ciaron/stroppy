@@ -1,8 +1,15 @@
 {% block sidebar %}
     <div class="sidebar">
-    <ul class="uk-list">
+    <ul class="uk-nav uk-nav-default">
         {% for galleryslug, gallery in galleries.items() %}
-           <li><a href="/{{galleryslug}}">{{gallery.name}}</a></li>
+        {% if loop.index == 1 %}
+        {#<li class="uk-active"> #}
+           <li>
+        {% else %}
+           <li>
+        {% endif %}
+               <a href="/{{galleryslug}}">{{gallery.name}}</a></li>
+           
         {% endfor %}
     </ul>   
  </div>

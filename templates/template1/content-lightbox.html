@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+      <div class="uk-width-1-1@m uk-child-width-1-4@m uk-child-width-1-2@s" uk-grid="masonry: true" uk-lightbox>
+
+      {% for k, v in galleries[slug].items() %}
+        {% if k=="images" %}
+          {% for name, image in v.items() %}
+          <div>
+               <a href="/{{slug}}/images/{{name}}" class="uk-inline" data-caption="{{image.title}}">
+                   <img data-src="/{{slug}}/images/{{name}}" width="240px" uk-img>
+                   {# <div class="uk-overlay uk-overlay-primary uk-position-bottom" id="my-id" hidden="true">{{ image.title }}</div> #}
+               </a>
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+      </div>
+
+      {#<button uk-toggle="target: #my-id" type="button" class="uk-overlay uk-position-bottom-right" uk-icon="icon: info"></button> #}
+{% endblock %}
