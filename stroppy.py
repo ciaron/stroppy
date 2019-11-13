@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 from shutil import copy
 from collections import OrderedDict
 import imghdr
@@ -10,7 +11,7 @@ from pathlib import Path
 home = str(Path.home())
 
 DEBUG = True
-COPY = False # whether to copy image files - only needed for first time runs
+COPY = True # whether to copy image files - only needed for first time runs
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -21,6 +22,7 @@ gallery_path="Dropbox/gallery" # path under $HOME
 base_path=os.path.join(home, gallery_path)
 config_file = "config.yml"
 site_dir="_site"
+delim = "__" # delimiter for leading ordering
 
 def read_config():
     # read the YAML config file into "conf" object
@@ -35,23 +37,29 @@ def read_galleries():
 
     galleries = OrderedDict()
     for g in gs: # gallery names, i.e. directory names
+        try:
+            cleanname = re.split(delim,g)[1]
+        except:
+            cleanname = re.split(delim,g)[0]
+        slug = slugify(cleanname)
+
         gallerypath = os.path.join(base_path, g) 
         if (not os.path.isdir(gallerypath) or g.startswith("_")): # ignore non-dirs and existing _site dir
             pass
         else:
             for root, dirs, files in os.walk(gallerypath):
-                galleries[slugify(g)] = {'name': g, 'images': {}}
+                galleries[slug] = {'name': cleanname, 'dir': g, 'images': {}}
                 for imagefilename in files:
 
                     if imghdr.what(os.path.join(gallerypath, imagefilename)): # is an image file
-                        galleries[slugify(g)]['images'][imagefilename] = {}
+                        galleries[slug]['images'][imagefilename] = {}
                         descriptorfilename = os.path.join(gallerypath, os.path.splitext(imagefilename)[0] + ".md")
                         if (os.path.exists(descriptorfilename)):
                             # there's an .md file matching this filename
                             with open(descriptorfilename) as stream:
                                 c = load(stream, Loader=Loader)
                                 for datakey,datavalue in c.items(): # add all the data to the image metadata
-                                    galleries[slugify(g)]['images'][imagefilename][datakey] = datavalue
+                                    galleries[slug]['images'][imagefilename][datakey] = datavalue
 
     # we now have a dict of the form:
     # {gallery_slug: 
@@ -75,7 +83,7 @@ def copy_images(gallery):
     print(dst)
 
     for i in galleries[gallery]['images']:
-        src = os.path.join(base_path, galleries[gallery]["name"], i)
+        src = os.path.join(base_path, galleries[gallery]["dir"], i)
         copy(src, dst)
 
 def renderHTML(template, galleries):
