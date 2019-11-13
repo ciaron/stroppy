@@ -39,7 +39,7 @@ def read_galleries():
     for g in gs: # gallery names, i.e. directory names
         try:
             cleanname = re.split(delim,g)[1]
-        except:
+        except: # cannot split
             cleanname = re.split(delim,g)[0]
         slug = slugify(cleanname)
 
