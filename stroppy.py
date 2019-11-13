@@ -11,7 +11,7 @@ from pathlib import Path
 home = str(Path.home())
 
 DEBUG = True
-COPY = True # whether to copy image files - only needed for first time runs
+COPY = False # whether to copy image files - only needed for first time runs
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -49,6 +49,7 @@ def read_galleries():
         else:
             for root, dirs, files in os.walk(gallerypath):
                 galleries[slug] = {'name': cleanname, 'dir': g, 'images': {}}
+                files.sort()
                 for imagefilename in files:
 
                     if imghdr.what(os.path.join(gallerypath, imagefilename)): # is an image file
@@ -60,6 +61,7 @@ def read_galleries():
                                 c = load(stream, Loader=Loader)
                                 for datakey,datavalue in c.items(): # add all the data to the image metadata
                                     galleries[slug]['images'][imagefilename][datakey] = datavalue
+                                    #print(datakey, datavalue)
 
     # we now have a dict of the form:
     # {gallery_slug: 

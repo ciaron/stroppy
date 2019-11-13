@@ -10,6 +10,9 @@
                <a href="/{{slug}}/images/{{name}}" class="uk-inline" data-caption="{{image.title}}">
                    {#<img data-src="/{{slug}}/images/{{name}}" width="240px" uk-img> #}
                    <img data-src="/{{slug}}/images/{{name}}" data-width uk-img>
+                   <div class="description" style="white-space: pre-wrap">
+                   {{- image.description -}}
+                   </div>
                    {# <div class="uk-overlay uk-overlay-primary uk-position-bottom" id="my-id" hidden="true">{{ image.title }}</div> #}
                </a>
           </div>
