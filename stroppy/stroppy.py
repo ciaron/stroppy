@@ -135,7 +135,8 @@ if __name__=="__main__":
         print("Failed to create site directory - exiting: %s, %s" % (type(err), err))
         sys.exit(1)
 
-    env = Environment(loader=FileSystemLoader(os.path.join('templates', conf['template'])), cache_size=0)
+    abs_path = os.path.abspath(os.path.dirname(__file__))
+    env = Environment(loader=FileSystemLoader(os.path.join(abs_path, 'templates', conf['template'])), cache_size=0)
     template = env.get_template('content.html')
 
     renderHTML(template, galleries)
