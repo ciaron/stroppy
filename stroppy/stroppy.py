@@ -11,7 +11,7 @@ from pathlib import Path
 home = str(Path.home())
 
 DEBUG = True
-COPY = False # whether to copy image files - only needed for first time runs
+COPY = True # whether to copy image files - only needed for first time runs
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
